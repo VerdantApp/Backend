@@ -1,10 +1,11 @@
 ﻿using Ardalis.ListStartupServices;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Verdant.API.Core;
-using Verdant.API.Infrastructure;
 using Microsoft.OpenApi.Models;
-using Serilog;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
+using Verdant.API.Core;
 using Verdant.API.Infrastructure;
 using Verdant.API.Infrastructure.Data;
 using Verdant.API.Web;
@@ -12,8 +13,6 @@ using Verdant.API.Web;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-
-builder.Host.UseSerilog((_, config) => config.ReadFrom.Configuration(builder.Configuration));
 
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
@@ -43,6 +42,34 @@ builder.Services.Configure<ServiceConfig>(config =>
   config.Path = "/listservices";
 });
 
+// Configure metrics
+builder.Services.AddOpenTelemetryMetrics(meterBuilder =>
+{
+  meterBuilder.AddHttpClientInstrumentation();
+  meterBuilder.AddAspNetCoreInstrumentation();
+  meterBuilder.AddMeter("VerdantAppMetrics");
+  meterBuilder.AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));
+});
+
+// Configure tracing
+builder.Services.AddOpenTelemetryTracing(tracerBuilder =>
+{
+  tracerBuilder.AddHttpClientInstrumentation();
+  tracerBuilder.AddAspNetCoreInstrumentation();
+  tracerBuilder.AddSource("VerdantAppActivitySource");
+  tracerBuilder.AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));
+});
+
+// Configure logging
+builder.Logging.AddOpenTelemetry(loggingBuilder =>
+{
+  loggingBuilder.IncludeFormattedMessage = true;
+  loggingBuilder.IncludeScopes = true;
+  loggingBuilder.ParseStateValues = true;
+  loggingBuilder.AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));
+});
+
+builder.Services.AddHttpContextAccessor();
 
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
