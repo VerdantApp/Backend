@@ -1,9 +1,11 @@
 ﻿using Ardalis.ListStartupServices;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Verdant.API.Core;
 using Verdant.API.Infrastructure;
@@ -45,6 +47,10 @@ builder.Services.Configure<ServiceConfig>(config =>
 // Configure metrics
 builder.Services.AddOpenTelemetryMetrics(meterBuilder =>
 {
+  meterBuilder
+    .SetResourceBuilder(ResourceBuilder
+      .CreateDefault()
+      .AddService("VerdantApp"));
   meterBuilder.AddHttpClientInstrumentation();
   meterBuilder.AddAspNetCoreInstrumentation();
   meterBuilder.AddMeter("VerdantAppMetrics");
@@ -54,6 +60,10 @@ builder.Services.AddOpenTelemetryMetrics(meterBuilder =>
 // Configure tracing
 builder.Services.AddOpenTelemetryTracing(tracerBuilder =>
 {
+  tracerBuilder
+    .SetResourceBuilder(ResourceBuilder
+      .CreateDefault()
+      .AddService("VerdantApp"));
   tracerBuilder.AddHttpClientInstrumentation();
   tracerBuilder.AddAspNetCoreInstrumentation();
   tracerBuilder.AddSource("VerdantAppActivitySource");
@@ -63,6 +73,10 @@ builder.Services.AddOpenTelemetryTracing(tracerBuilder =>
 // Configure logging
 builder.Logging.AddOpenTelemetry(loggingBuilder =>
 {
+  loggingBuilder
+    .SetResourceBuilder(ResourceBuilder
+      .CreateDefault()
+      .AddService("VerdantApp"));
   loggingBuilder.IncludeFormattedMessage = true;
   loggingBuilder.IncludeScopes = true;
   loggingBuilder.ParseStateValues = true;
