@@ -15,7 +15,7 @@
     <PackageReference Include="Ardalis.Specification" Version="6.1.0" />
     <PackageReference Include="Autofac" Version="6.5.0" />
     <PackageReference Include="MediatR" Version="11.1.0" />
-    <PackageReference Include="TIKSN-Framework" Version="4.3.2" />
+    <PackageReference Include="TIKSN-Framework" Version="4.3.3" />
   </ItemGroup>
 
   <ItemGroup>
