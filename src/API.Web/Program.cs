@@ -11,10 +11,13 @@ using Verdant.API.Core;
 using Verdant.API.Infrastructure;
 using Verdant.API.Infrastructure.Data;
 using Verdant.API.Web;
+using VerdantApp.Licensing;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+builder.Services.AddLicense();
 
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
