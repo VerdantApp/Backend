@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyDoubles" Version="1.1.0" />
+    <PackageReference Include="EasyDoubles" Version="1.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageReference Include="TIKSN-Framework" Version="5.0.2-alpha.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.0">
