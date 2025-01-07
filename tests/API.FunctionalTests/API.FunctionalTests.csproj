@@ -9,9 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyDoubles" Version="1.1.14" />
+    <PackageReference Include="EasyDoubles" Version="1.1.15" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-    <PackageReference Include="TIKSN-Framework" Version="5.4.2" />
+    <PackageReference Include="TIKSN-Framework" Version="5.4.3" />
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
